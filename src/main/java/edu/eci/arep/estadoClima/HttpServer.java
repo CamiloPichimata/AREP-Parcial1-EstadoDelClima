@@ -85,7 +85,7 @@ public class HttpServer {
                     + "    var label = document.getElementById('rtaConsulta');"
                     + "    var lugar = document.getElementById('Get-Clima');"
                     + "    axios.get('/consulta?lugar=' + lugar.value).then(response => {"
-                    + "        var rta = JSON.parse(response.data);"
+                    + "        var rta = response.data;"
                     + "        label.innerHTML = rta;"
                     + "    });"
                     + "}"
