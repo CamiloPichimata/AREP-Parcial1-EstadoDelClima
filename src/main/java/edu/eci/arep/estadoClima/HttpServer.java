@@ -7,6 +7,9 @@ public class HttpServer {
 
 	public static void main(String[] args) throws IOException {
        
+		String URLConsulta = "";
+		String consultaLugar = "";
+		
 		boolean running = true;
 		
 		ServerSocket serverSocket = null;
@@ -34,18 +37,28 @@ public class HttpServer {
 		
 		boolean primeraLinea = true;
 		String file = "";
+		String lugar = "";
+
 		while ((inputLine = in.readLine()) != null) {
             System.out.println("Received: " + inputLine);
             if (primeraLinea) {
                 file = inputLine.split(" ")[1];
                 System.out.println("File: " + file);
                 primeraLinea = false;
+                
+                if (inputLine.contains("lugar")) {
+                	lugar = inputLine.split("=")[1];
+                	lugar = lugar.split(" ")[0];
+                	System.out.println("Lugar = -------------" + lugar + "-----------------");
+                	URLConsulta = "http://api.openweathermap.org/data/2.5/weather?q=" + lugar + "&appid=294125cf28db42f2079fe33557675f29";
+                }
+                
             }
             if (!in.ready()) {
                 break;
             }
         }
-		if (file.startsWith("/Clima")) {
+		if (file.startsWith("/clima")) {
         	outputLine = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: text/html\r\n"
                     + "\r\n"
@@ -61,18 +74,35 @@ public class HttpServer {
                     + "<label for='Get-Clima'>Lugar a consultar: </label>"
                     + "<input id='Get-Clima' type='text'>"
                     + "<input type='button' value='Consultar' class='Boton' onclick=clickF()>"
+                    + "<div><label id='rtaConsulta'>Label RTA</label></div>"
                     + "</body>"
+                    + "<script src=\"https://unpkg.com/axios/dist/axios.min.js\"></script>"
+                    + "<script src=\"https://code.jquery.com/jquery-3.4.1.min.js\"></script>"
                     + "<script>"
                     + "var boton = document.getElementById('Boton');"
-                    + "var clickF = function() {console.log('Click en el boton de consulta');}"
+                    + "var clickF = function() {"
+                    + "    console.log('Click en el boton de consulta');"
+                    + "    var label = document.getElementById('rtaConsulta');"
+                    + "    var lugar = document.getElementById('Get-Clima');"
+                    + "    axios.get('/consulta?lugar=' + lugar.value).then(response => {"
+                    + "        var rta = JSON.parse(response.data);"
+                    + "        label.innerHTML = rta;"
+                    + "    });"
+                    + "}"
                     + "</script>"
                     + "</html>";
         
-        } else if (file.startsWith("/Consulta")) {
-        	outputLine = "No implementado aun";
-        	// Realizar la consulta al API
+        } else if (file.startsWith("/consulta")) {
+        	consultaLugar = ConsultaReader.consultaURL(URLConsulta);
+        	System.out.println("Consulta realizada RTA: ----------------------------");
+        	System.out.println(consultaLugar);
+        	System.out.println("----------------------------------------------------------------");
+        	outputLine = "HTTP/1.1 200 OK\r\n"
+                    + "Content-Type: text/json\r\n"
+                    + "\r\n"
+                    + consultaLugar;
         	
-    	}else {
+    	} else {
             outputLine = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: text/html\r\n"
                     + "\r\n"
