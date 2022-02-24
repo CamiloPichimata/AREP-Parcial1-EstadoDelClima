@@ -98,7 +98,7 @@ public class HttpServer {
         	System.out.println(consultaLugar);
         	System.out.println("----------------------------------------------------------------");
         	outputLine = "HTTP/1.1 200 OK\r\n"
-                    + "Content-Type: text/json\r\n"
+                    + "Content-Type: application/json\r\n"
                     + "\r\n"
                     + consultaLugar;
         	
