@@ -49,7 +49,6 @@ public class HttpServer {
                 if (inputLine.contains("lugar")) {
                 	lugar = inputLine.split("=")[1];
                 	lugar = lugar.split(" ")[0];
-                	System.out.println("Lugar = -------------" + lugar + "-----------------");
                 	URLConsulta = "http://api.openweathermap.org/data/2.5/weather?q=" + lugar + "&appid=294125cf28db42f2079fe33557675f29";
                 }
                 
@@ -68,13 +67,15 @@ public class HttpServer {
                     + "<meta charset=\"UTF-8\">"
                     + "<title>Estado del Clima</title>\n"
                     + "</head>"
+                    + "<style>body {text-align: center; font-family: 'Akaya Telivigala', cursive;}</style>"
                     + "<body>"
                     + "<h1>Estado del clima</h1>"
                     + "<form class='Form'>"
                     + "<label for='Get-Clima'>Lugar a consultar: </label>"
                     + "<input id='Get-Clima' type='text'>"
                     + "<input type='button' value='Consultar' class='Boton' onclick=clickF()>"
-                    + "<div><label id='rtaConsulta'>Label RTA</label></div>"
+                    + "<div><br></br></div>"
+                    + "<div><label id='rtaConsulta'></label></div>"
                     + "</body>"
                     + "<script src=\"https://unpkg.com/axios/dist/axios.min.js\"></script>"
                     + "<script src=\"https://code.jquery.com/jquery-3.4.1.min.js\"></script>"
@@ -94,9 +95,6 @@ public class HttpServer {
         
         } else if (file.startsWith("/consulta")) {
         	consultaLugar = ConsultaReader.consultaURL(URLConsulta);
-        	System.out.println("Consulta realizada RTA: ----------------------------");
-        	System.out.println(consultaLugar);
-        	System.out.println("----------------------------------------------------------------");
         	outputLine = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: application/json\r\n"
                     + "\r\n"
